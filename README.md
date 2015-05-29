@@ -58,6 +58,22 @@ Clicking on the name or password box will copy the respective contents to the pa
 
 ![Subdirectory Listing](https://raw.github.com/rephorm/pass-ios/screenshots/screenshots/4_gpg.png)
 
+Building
+--------
+
+1. Obtain the iPhone SDK, usually done via Xcode.
+
+2. Build using the following:
+
+       mkdir pass-ios-build
+       git clone --recursive https://github.com/rpetrich/theos.git
+       git clone --recursive https://github.com/davidjb/pass-ios.git
+       export THEOS_MAKE_PATH=$(pwd)/theos/makefiles
+       cd pass-ios
+       make
+       make package
+
+
 Todo
 ----
 
