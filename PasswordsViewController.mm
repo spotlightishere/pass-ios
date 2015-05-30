@@ -10,6 +10,7 @@
 #import "PassEntry.h"
 #import "PassEntryViewController.h"
 #import <dirent.h>
+#import "A0SimpleKeychain.h"
 
 @implementation PasswordsViewController
 
@@ -17,8 +18,26 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  if (self.title == nil)
+  if (self.title == nil) {
     self.title = NSLocalizedString(@"Passwords", @"Password title");
+  }
+
+  // TODO Change this into obvious text
+  UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(clearPassphrase) ];
+  self.navigationItem.rightBarButtonItem = clearButton;
+  [clearButton release];
+}
+
+- (void)clearPassphrase {
+  // TODO Refactor into shared function
+  A0SimpleKeychain *keychain = [A0SimpleKeychain keychain];
+  NSString *keychain_key;
+  keychain.useAccessControl = YES;
+  keychain.defaultAccessiblity = A0SimpleKeychainItemAccessibleWhenPasscodeSetThisDeviceOnly;
+  keychain_key = @"gpg-passphrase-touchid";
+  [keychain deleteEntryForKey:keychain_key];
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Deleted" message:@"Passphrase removed from Keychain" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+  [alert show];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

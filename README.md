@@ -88,6 +88,10 @@ Todo
 
 * Reset pasteboard contents after 45 s when copying password.
 
+* Add removal button for deleting passphrase from Keychain
+
+* Change UI table cells when displaying passwords (temporarily)
+
 * Configurable Settings
 
   - base directory location (other than /var/mobile/.password-store)
