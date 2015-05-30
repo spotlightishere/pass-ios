@@ -25,8 +25,8 @@
   [super viewDidLoad];
 //  self.title = NSLocalizedString(@"Passwords", @"Password title");
   self.keychain = [A0SimpleKeychain keychain];
-  self.useTouchID = YES; // Make this optional for non iOS 8.
 
+  self.useTouchID = YES; // TODO Make this optional for non-iOS 8.
   if (self.useTouchID) {
     // Local TouchID authentication
     self.keychain.useAccessControl = YES;
@@ -112,8 +112,13 @@
 }
 
 - (BOOL)copyPass:(BOOL)passwordOnly {
-  NSString *passphrase = [self.keychain stringForKey:self.keychain_key promptMessage:@"Unlock your keychain to access this password."];
   NSString *pass;
+  NSString *passphrase;
+  if (self.useTouchID) {
+    passphrase = [self.keychain stringForKey:self.keychain_key promptMessage:@"Unlock your keychain to access this password."];
+  } else {
+    passphrase = [self.keychain stringForKey:self.keychain_key];
+  }
 
   if (passphrase) {
     pass = [self.entry passWithPassphrase:passphrase passwordOnly:passwordOnly];
@@ -146,7 +151,11 @@
     // If the passphrase decrypts the entry, save it
     password = [self.entry passWithPassphrase:passphrase passwordOnly:YES];
     if (password) {
-      [self.keychain setString:passphrase forKey:self.keychain_key promptMessage:@"Securely store your GPG passphrase"];
+      if (self.useTouchID) {
+        [self.keychain setString:passphrase forKey:self.keychain_key promptMessage:@"Securely store your GPG passphrase"];
+      } else {
+        [self.keychain setString:passphrase forKey:self.keychain_key];
+      }
       [self copyToPasteboard:password];
     } else {
       UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Passphrase invalid" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
