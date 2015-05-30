@@ -9,34 +9,24 @@
 #import "A0SimpleKeychain.h"
 
 @interface PassEntryViewController()
-@property (nonatomic,retain) NSString *passphrase;
 @property (nonatomic,retain) A0SimpleKeychain *keychain;
 @property (nonatomic,retain) NSString *keychain_key;
-@property (nonatomic,assign) BOOL useTouchID;
 //-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)requestPassphrase;
 - (void)copyName;
-- (BOOL)copyPass;
+- (BOOL)copyPass:(BOOL)passwordOnly;
 @end
 
 
 @implementation PassEntryViewController
 @synthesize entry;
-@synthesize passphrase;
-@synthesize keychain;
-@synthesize keychain_key;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
 //  self.title = NSLocalizedString(@"Passwords", @"Password title");
-  // Deleting the old passphrase
-  // TODO Add a clear keychain button on the home screen
-  //[self.keychain deleteEntryForKey:@"passphrase"];
-  //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase removed" message:@"Old passphrase was removed from keychain." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-  //[alert show];
-  //return;
-
+  self.keychain = [A0SimpleKeychain keychain];
   self.useTouchID = YES; // Make this optional for non iOS 8.
+
   if (self.useTouchID) {
     // Local TouchID authentication
     self.keychain.useAccessControl = YES;
@@ -45,7 +35,6 @@
   } else {
     self.keychain_key = @"passphrase";
   }
-
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -54,7 +43,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 2;
+  return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -94,38 +83,50 @@
       break;
     case 1:
       // Password, first line only
-      if (self.useTouchID) {
-        self.passphrase = [self.keychain stringForKey:self.keychain_key promptMessage:@"Do you wish to copy this password?"];
-      } else {
-        self.passphrase = [self.keychain stringForKey:self.keychain_key];
-      }
-      if (self.passphrase == nil) {
+      // Try and decrypt password; if that fails, request it
+      if (![self copyPass]) {
         [self requestPassphrase];
-      } else {
-        [self copyPass];
       }
       break;
     case 2:
       // Full text, all lines
-      // TODO Add implementation
+      if (![self copyPass:NO]) {
+        [self requestPassphrase];
+      }
       break;
     default:
       break;
   }
 }
 
+- (void)copyToPasteboard:(NSString *)string {
+  [UIPasteboard generalPasteboard].string = string;
+}
+
 - (void)copyName {
-  [UIPasteboard generalPasteboard].string = self.entry.name;
+  [self copyToPasteboard:self.entry.name];
 }
 
 - (BOOL)copyPass {
-  NSString *pass = [self.entry passWithPassphrase:self.passphrase];
-  if (pass == nil) {
-    [self.keychain deleteEntryForKey:self.keychain_key];
-    return NO;
+  return [self copyPass:YES];
+}
+
+- (BOOL)copyPass:(BOOL)passwordOnly {
+  NSString *passphrase = [self.keychain stringForKey:self.keychain_key promptMessage:@"Unlock your keychain to access this password."];
+  NSString *pass;
+
+  if (passphrase) {
+    pass = [self.entry passWithPassphrase:passphrase passwordOnly:passwordOnly];
+    if (pass) {
+      [self copyToPasteboard:pass];
+      return YES;
+    } else {
+      [self.keychain deleteEntryForKey:self.keychain_key];
+      [self debugAlert:@"Removed incorrect GPG passphrase from keychain."];
+      return NO;
+    }
   } else {
-    [UIPasteboard generalPasteboard].string = pass;
-    return YES;
+      return NO;
   }
 }
 
@@ -137,14 +138,27 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+  NSString *passphrase;
+  NSString *password;
   if (buttonIndex == 1) {
-    self.passphrase = [alertView textFieldAtIndex:0].text;
-    [self.keychain setString:self.passphrase forKey:self.keychain_key promptMessage:@"Securely store your passphrase?"];
-    if (![self copyPass]) {
+    passphrase = [alertView textFieldAtIndex:0].text;
+
+    // If the passphrase decrypts the entry, save it
+    password = [self.entry passWithPassphrase:passphrase passwordOnly:YES];
+    if (password) {
+      [self.keychain setString:passphrase forKey:self.keychain_key promptMessage:@"Securely store your GPG passphrase"];
+      [self copyToPasteboard:password];
+    } else {
       UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Passphrase invalid" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
       [alert show];
     }
   }
+}
+
+//Example: [self debugAlert:@"Pass was nil; would delete here"];
+- (void)debugAlert:(NSString *)alertMessage {
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:alertMessage delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+  [alert show];
 }
 
 @end

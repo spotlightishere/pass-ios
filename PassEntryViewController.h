@@ -12,4 +12,6 @@
 
 @property(nonatomic,retain) PassEntry *entry;
 
+@property(nonatomic,assign) BOOL useTouchID;
+
 @end

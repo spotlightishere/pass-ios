@@ -19,7 +19,7 @@
     return name;
 }
 
-- (NSString *)passWithPassphrase:(NSString *)passphrase
+- (NSString *)passWithPassphrase:(NSString *)passphrase passwordOnly:(BOOL)passwordOnly
 {
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:@"/usr/bin/gpg"];
@@ -43,8 +43,8 @@
     NSFileHandle *ofile = [opipe fileHandleForReading];
     NSData *data = [ofile readDataToEndOfFile];
     NSString *str= [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    // return first line of file 
-    return [[str componentsSeparatedByString:@"\n"] objectAtIndex:0];
+    // return first line of file or all of file
+    return passwordOnly ? [[str componentsSeparatedByString:@"\n"] objectAtIndex:0] : str;
   } else {
       NSFileHandle *ofile = [erroPipe fileHandleForReading];
       NSData *data = [ofile readDataToEndOfFile];

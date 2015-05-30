@@ -13,6 +13,6 @@
 @property (nonatomic,assign) BOOL is_dir;
 @property (nonatomic,readonly) NSString *pass;
 
-- (NSString *)passWithPassphrase:(NSString *)passphrase;
+- (NSString *)passWithPassphrase:(NSString *)passphrase passwordOnly:(BOOL)passwordOnly;
 
 @end
