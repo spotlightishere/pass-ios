@@ -1,0 +1,3 @@
+[submodule "modules/SimpleKeychain"]
+	path = modules/SimpleKeychain
+	url = https://github.com/auth0/SimpleKeychain.git
