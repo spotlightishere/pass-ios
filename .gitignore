@@ -1,3 +1,5 @@
 .theos/*
 _/*
 obj/*
+*.deb
+*.swp
