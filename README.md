@@ -87,6 +87,11 @@ Building
 Todo
 ----
 
+* Configure for higher-resolution devices (eg iPhone 6 plus, etc).
+  For now, the tweak ForceGoodFit works a charm.
+
+* Allow use in landscape mode. Only works in portrait for now.
+
 * Simplify initial setup
 
   - enter git repo url to clone
