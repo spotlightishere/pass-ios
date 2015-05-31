@@ -23,7 +23,7 @@
   }
 
   // TODO Change this into obvious text
-  UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(clearPassphrase) ];
+  UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithTitle:@"Clear Keychain" style:UIBarButtonItemStylePlain target:self action:@selector(clearPassphrase) ];
   self.navigationItem.rightBarButtonItem = clearButton;
   [clearButton release];
 }
