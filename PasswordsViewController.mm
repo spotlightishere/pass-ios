@@ -67,6 +67,30 @@
   return cell;
 }
 
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+  // Return unique, capitalised first letters of entries
+  NSMutableArray *firstLetters = [[[NSMutableArray alloc] init] autorelease];
+  [firstLetters addObject:UITableViewIndexSearch];
+  for (int i = 0; i < [self.entries numEntries]; i++) {
+    NSString *letterString = [[[self.entries entryAtIndex:i].name substringToIndex:1] uppercaseString];
+    if (![firstLetters containsObject:letterString]) {
+      [firstLetters addObject:letterString];
+    }
+  }
+  return firstLetters;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+  for (int i = 0; i < [self.entries numEntries]; i++) {
+    NSString *letterString = [[[self.entries entryAtIndex:i].name substringToIndex:1] uppercaseString];
+    if ([letterString isEqualToString:title]) {
+      [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+      break;
+    }
+  }
+  return 1;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:NO];
 
