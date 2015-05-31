@@ -22,7 +22,6 @@
     self.title = NSLocalizedString(@"Passwords", @"Password title");
   }
 
-  // TODO Change this into obvious text
   UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithTitle:@"Clear Keychain" style:UIBarButtonItemStylePlain target:self action:@selector(clearPassphrase) ];
   self.navigationItem.rightBarButtonItem = clearButton;
   [clearButton release];
