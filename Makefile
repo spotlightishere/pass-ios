@@ -9,3 +9,6 @@ passwordstore_FRAMEWORKS = UIKit CoreGraphics Security
 TARGET_CODESIGN_FLAGS = -Sent.xml
 
 include $(THEOS_MAKE_PATH)/application.mk
+
+build-install: clean package install
+

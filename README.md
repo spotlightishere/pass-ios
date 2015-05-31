@@ -73,6 +73,16 @@ Building
        make
        make package
 
+3. Install directly your device over SSH with:
+
+       export THEOS_DEVICE_IP=[device IP]
+       make install
+
+       # or to clean, build and install in one
+       make build-install
+
+   ensuring that you have access to root on your device via SSH.
+
 
 Todo
 ----
