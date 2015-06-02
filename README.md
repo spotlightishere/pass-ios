@@ -1,7 +1,7 @@
 Pass for iOS
 ============
 
-![Icon](https://raw.github.com/davidjb/pass-ios/master/Resources/Icon.png)
+![Icon](https://raw.github.com/davidjb/pass-ios/master/Resources/Icon@3x.png)
 
 View your [password-store][] passwords on your iDevice.
 
