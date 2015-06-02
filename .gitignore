@@ -3,3 +3,4 @@ _/*
 obj/*
 *.deb
 *.swp
+.DS_Store
