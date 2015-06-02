@@ -1,16 +1,54 @@
-{
-    CFBundleExecutable = "passwordstore";
-    CFBundleIconFile = Icon.png;
-    CFBundleIdentifier = "com.rephorm.pass";
-    CFBundleInfoDictionaryVersion = 6.0;
-    CFBundlePackageType = APPL;
-    CFBundleSignature = "????";
-    CFBundleSupportedPlatforms = (
-	iPhoneOS
-    );
-    CFBundleVersion = 1.0;
-    DTPlatformName = iphoneos;
-    DTSDKName = iphoneos3.0;
-    LSRequiresIPhoneOS = 1;
-    MinimumOSVersion = 3.0;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>passwordstore</string>
+	<key>CFBundleExecutable</key>
+	<string>passwordstore</string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Icon</string>
+	</array>
+	<key>CFBundleIdentifier</key>
+	<string>com.rephorm.pass</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>LSRequiresIPhoneOS</key>
+	<string>1</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>CFBundleName</key>
+	<string>passwordstore</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>iPhoneOS</string>
+	</array>
+	<key>DTPlatformName</key>
+	<string>iphoneos</string>
+	<key>DTSDKName</key>
+	<string>iphoneos3.0</string>
+	<key>MinimumOSVersion</key>
+	<string>3.0</string>
+</dict>
+</plist>
