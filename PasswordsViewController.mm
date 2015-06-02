@@ -9,7 +9,6 @@
 #import "PassDataController.h"
 #import "PassEntry.h"
 #import "PassEntryViewController.h"
-#import <dirent.h>
 #import "A0SimpleKeychain.h"
 
 @implementation PasswordsViewController
