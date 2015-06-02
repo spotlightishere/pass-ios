@@ -68,7 +68,7 @@ Building
        mkdir pass-ios-build
        git clone --recursive https://github.com/rpetrich/theos.git
        git clone --recursive https://github.com/davidjb/pass-ios.git
-       export THEOS_MAKE_PATH=$(pwd)/theos/makefiles
+       export THEOS=$(pwd)/theos
        cd pass-ios
        make
        make package
