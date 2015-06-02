@@ -448,7 +448,7 @@
        xlink:href="#linearGradient4036"
        id="radialGradient4271"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-5.4698157,-2.1002336e-8,0,-3.0923385,495.77837,4018.1126)"
+       gradientTransform="matrix(-5.4698157,-2.1002336e-8,0,-3.0923385,595.77837,4018.1126)"
        cx="98.5"
        cy="995.51117"
        fx="98.5"
@@ -459,7 +459,7 @@
        xlink:href="#linearGradient4048"
        id="linearGradient4273"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.9649661,0,0,1.9649118,-98.99998,-1016.4367)"
+       gradientTransform="matrix(1.9649661,0,0,1.9649118,1.00002,-1016.4367)"
        x1="56.922096"
        y1="995.57788"
        x2="57.176777"
@@ -669,11 +669,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="336.972"
-     inkscape:cy="433.17117"
+     inkscape:zoom="0.5"
+     inkscape:cx="683.63898"
+     inkscape:cy="176.63537"
      inkscape:document-units="px"
-     inkscape:current-layer="g4608"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
      inkscape:window-height="1001"
@@ -688,7 +688,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1298,7 +1298,7 @@
          ry="19.649118"
          rx="19.64966"
          y="939.36218"
-         x="-98.999969"
+         x="1.0000305"
          height="111.99997"
          width="112.00307"
          id="rect4267"
