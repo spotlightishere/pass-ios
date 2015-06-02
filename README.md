@@ -91,8 +91,6 @@ Building
 Todo
 ----
 
-* Update Core Foundation keys https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-SW10
-
 * Allow use in landscape mode. Only works in portrait for now.
 
 * Simplify initial setup
