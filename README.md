@@ -65,23 +65,27 @@ Building
 
 2. Build using the following:
 
-       mkdir pass-ios-build
-       git clone --recursive https://github.com/rpetrich/theos.git
-       git clone --recursive https://github.com/davidjb/pass-ios.git
-       export THEOS=$(pwd)/theos
-       cd pass-ios
-       make
-       make package
+   ```
+   mkdir pass-ios-build
+   git clone --recursive https://github.com/rpetrich/theos.git
+   git clone --recursive https://github.com/davidjb/pass-ios.git
+   export THEOS=$(pwd)/theos
+   cd pass-ios
+   make
+   make package
+   ```
 
 3. Install directly your device over SSH with:
 
-       export THEOS_DEVICE_IP=[device IP]
-       make install
+   ```
+   export THEOS_DEVICE_IP=[device IP]
+   make install
 
-       # or to clean, build and install in one
-       make build-install
+   # or to clean, build and install in one
+   make build-install
+   ```
 
-   ensuring that you have access to root on your device via SSH.
+   Ensure that you have access to root on your device via SSH.
 
 
 Todo
@@ -102,12 +106,11 @@ Todo
 
 * Reset pasteboard contents after 45 s when copying password.
 
-* Add removal button for deleting passphrase from Keychain
-
 * Change UI table cells when displaying passwords (temporarily)
 
 * Configurable Settings
 
+  - allow showing passwords on screen rather than copying
   - base directory location (other than /var/mobile/.password-store)
   - whether to store passphrase in keychain
   - passphrase storage duration (X minutes or forever)
