@@ -30,8 +30,8 @@
 
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_viewController];
 
-    //[_window addSubview:_viewController.view];
-    [_window addSubview:navigationController.view];
+    // Ensures app is able to change orientation; subviews don't work
+    _window.rootViewController = navigationController;
     [_window makeKeyAndVisible];
 }
 

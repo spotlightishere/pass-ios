@@ -91,8 +91,6 @@ Building
 Todo
 ----
 
-* Allow use in landscape mode. Only works in portrait for now.
-
 * Simplify initial setup
 
   - enter git repo url to clone
