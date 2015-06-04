@@ -7,3 +7,5 @@ Hacking on this project
 
 * Theos Reference: https://github.com/theiostream/theos-ref/
 
+* Objective C: http://cocoadevcentral.com/d/learn_objectivec/
+
