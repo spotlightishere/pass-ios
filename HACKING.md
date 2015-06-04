@@ -9,3 +9,4 @@ Hacking on this project
 
 * Objective C: http://cocoadevcentral.com/d/learn_objectivec/
 
+* SimpleKeychain: https://github.com/auth0/SimpleKeychain
