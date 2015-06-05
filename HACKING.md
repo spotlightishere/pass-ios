@@ -6,6 +6,8 @@ Hacking on this project
 * Theos Development suite: http://iphonedevwiki.net/index.php/Theos
 
 * Theos Reference: https://github.com/theiostream/theos-ref/
+  
+  * Theos Makefiles: http://uv.howett.net/ipf.html
 
 * Objective C: http://cocoadevcentral.com/d/learn_objectivec/
 
