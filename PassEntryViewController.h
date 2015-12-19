@@ -12,7 +12,7 @@
 }
 
 @property(nonatomic,retain) PassEntry *entry;
-
+@property(nonatomic,retain) UIPasteboard *pasteboard;
 @property(nonatomic,assign) BOOL useTouchID;
 
 @end

@@ -28,6 +28,7 @@
 
   self.keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass"];
   self.useTouchID = [[self.keychain class] supportsSecureEnclaveKeychainItems];
+  self.pasteboard = [UIPasteboard generalPasteboard];
 
   // TODO Further work required for non-TouchID devices
   if (self.useTouchID) {
@@ -112,7 +113,7 @@
 }
 
 - (void)copyToPasteboard:(NSString *)string {
-  [UIPasteboard generalPasteboard].string = string;
+  self.pasteboard.string = string;
 }
 
 - (void)showAlertWithMessage:(NSString *)message alertTitle:(NSString *)title {
