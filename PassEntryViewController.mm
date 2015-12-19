@@ -12,6 +12,7 @@
 @interface PassEntryViewController()
 @property (nonatomic,retain) VALSecureEnclaveValet *keychain;
 @property (nonatomic,retain) NSString *keychain_key;
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 - (void)copyName;
 - (void)showAlertWithMessage:(NSString *)message alertTitle:(NSString *)title;
 - (void)decryptGpgWithPasswordOnly:(BOOL)passwordOnly copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert;
@@ -25,6 +26,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   // self.title = NSLocalizedString(@"Passwords", @"Password title");
+  self.backgroundTaskIdentifier = 0;
 
   self.keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass"];
   self.useTouchID = [[self.keychain class] supportsSecureEnclaveKeychainItems];
@@ -116,6 +118,42 @@
   self.pasteboard.string = string;
 }
 
+- (void)copyToPasteboard:(NSString *)string clearTimeout:(double)timeout {
+  // Store the original value for restoration later
+  NSString *originalPasteboard = self.pasteboard.string;
+
+  // Copy the password onto the pasteboard
+  [self copyToPasteboard:string];
+
+  NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+  [userInfo setObject:originalPasteboard forKey:@"originalPasteboard"];
+
+  __weak UIViewController *weakSelf = self;
+  self.backgroundTaskIdentifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+    // Once run, invalidate
+    [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTaskIdentifier];
+    self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+  }];
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSTimer *timer = [NSTimer timerWithTimeInterval:timeout target:weakSelf selector:@selector(restorePasteboardWithTimer:) userInfo:userInfo repeats:NO];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+  });
+}
+
+- (void)restorePasteboardWithTimer:(NSTimer *)timer {
+  NSDictionary *dict = [timer userInfo];
+  NSString *originalPasteboard = [dict objectForKey:@"originalPasteboard"];
+
+  // Replace the original string. We can't access the pasteboard to
+  // actually determine whether we should replace or not, so do it anyway.
+  // TODO Implement an option
+  [self copyToPasteboard:originalPasteboard];
+
+  // Once run, invalidate this task
+  [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTaskIdentifier];
+  self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+}
+
 - (void)showAlertWithMessage:(NSString *)message alertTitle:(NSString *)title {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
@@ -129,7 +167,7 @@
 
 - (void) performPasswordAction:(NSString *)password entryTitle:(NSString *)title copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert {
   if (pasteboard) {
-    [self copyToPasteboard:password];
+    [self copyToPasteboard:password clearTimeout:45.0];
   }
   if (showAlert) {
     [self showAlertWithMessage:password alertTitle:title];

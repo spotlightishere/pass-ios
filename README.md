@@ -101,12 +101,8 @@ Todo
   - paste gpg key
 
 * Better details screen
-  - allow viewing multi-line content
-  - auto-decrypt if passphrase stored?
 
-* Reset pasteboard contents after 45 s when copying password.
-
-* Change UI table cells when displaying passwords (temporarily)
+  - Change UI table cells when displaying passwords (temporarily)
 
 * Configurable Settings
 
@@ -118,6 +114,4 @@ Todo
 
 * Password editing / adding
   - auto-commit ala pass bash script
-
-* trigger 'git pull' from app (also 'git push' after editing is implemented)
-* dropbox support?
+  - trigger 'git pull' from app (also 'git push' after editing is implemented)
