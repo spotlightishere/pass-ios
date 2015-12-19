@@ -65,7 +65,7 @@
       break;
     case 2:
       cell.textLabel.text = @"Password";
-      cell.detailTextLabel.text = @"Tap to copy to Pasteboard";
+      cell.detailTextLabel.text = @"Tap to copy";
       break;
     case 3:
       cell.textLabel.text = @"Full text";
@@ -73,7 +73,7 @@
       break;
     case 4:
       cell.textLabel.text = @"Full text";
-      cell.detailTextLabel.text = @"Tap to copy to Pasteboard";
+      cell.detailTextLabel.text = @"Tap to copy";
       break;
     default:
       break;
