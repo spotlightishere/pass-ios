@@ -5,9 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>passwordstore</string>
+	<string>pass</string>
 	<key>CFBundleExecutable</key>
-	<string>passwordstore</string>
+	<string>pass</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon</string>
@@ -37,7 +37,7 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>passwordstore</string>
+	<string>pass</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleSupportedPlatforms</key>
