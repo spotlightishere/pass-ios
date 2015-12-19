@@ -37,8 +37,6 @@
 
   int status = [task terminationStatus];
 
-  [task release];
-
   if (status == 0) {
     NSFileHandle *ofile = [opipe fileHandleForReading];
     NSData *data = [ofile readDataToEndOfFile];

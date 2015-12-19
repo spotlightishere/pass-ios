@@ -9,7 +9,7 @@
 #import "PassDataController.h"
 #import "PassEntry.h"
 #import "PassEntryViewController.h"
-#import "A0SimpleKeychain.h"
+#import "Valet/Valet.h"
 
 @implementation PasswordsViewController
 
@@ -23,19 +23,17 @@
 
   UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithTitle:@"Clear Keychain" style:UIBarButtonItemStylePlain target:self action:@selector(clearPassphrase) ];
   self.navigationItem.rightBarButtonItem = clearButton;
-  [clearButton release];
 }
 
 - (void)clearPassphrase {
   // TODO Refactor into shared function
-  A0SimpleKeychain *keychain = [A0SimpleKeychain keychain];
-  NSString *keychain_key;
-  keychain.useAccessControl = YES;
-  keychain.defaultAccessiblity = A0SimpleKeychainItemAccessibleWhenPasscodeSetThisDeviceOnly;
-  keychain_key = @"gpg-passphrase-touchid";
-  [keychain deleteEntryForKey:keychain_key];
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Deleted" message:@"Passphrase removed from Keychain" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-  [alert show];
+  VALSecureEnclaveValet *keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass"];
+  [keychain removeObjectForKey:@"gpg-passphrase-touchid"];
+
+  UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Keychain cleared" message:@"Passphrase has been removed from the keychain" preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
+  [alert addAction:defaultAction];
+  [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -52,7 +50,7 @@
   static NSString *CellIdentifier = @"EntryCell";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   if (cell == nil) {
-    cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
   }
 
   PassEntry *entry = [self.entries entryAtIndex:indexPath.row];
@@ -68,7 +66,7 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
   // Return unique, capitalised first letters of entries
-  NSMutableArray *firstLetters = [[[NSMutableArray alloc] init] autorelease];
+  NSMutableArray *firstLetters = [[NSMutableArray alloc] init];
   [firstLetters addObject:UITableViewIndexSearch];
   for (int i = 0; i < [self.entries numEntries]; i++) {
     NSString *letterString = [[[self.entries entryAtIndex:i].name substringToIndex:1] uppercaseString];
@@ -101,13 +99,10 @@
     subviewController.entries = [[PassDataController alloc] initWithPath:entry.path];
     subviewController.title = entry.name;
     [[self navigationController] pushViewController:subviewController animated:YES];
-    [subviewController release];
   } else {
-
     PassEntryViewController *detailController = [[PassEntryViewController alloc] init];
     detailController.entry = entry;
     [[self navigationController] pushViewController:detailController animated:YES];
-    [detailController release];
   }
 }
 

@@ -42,12 +42,6 @@
     //  [[PDKeychainBindings sharedKeychainBindings] removeObjectForKey:@"passphrase"];
 }
 
-- (void)dealloc
-{
-    [_viewController release];
-    [_window release];
-    [super dealloc];
-}
 @end
 
 // vim:ft=objc

@@ -6,15 +6,15 @@
  */
 #import "PassEntryViewController.h"
 #import "PassEntry.h"
-#import "A0SimpleKeychain.h"
+#import "Valet/Valet.h"
 
 @interface PassEntryViewController()
-@property (nonatomic,retain) A0SimpleKeychain *keychain;
+@property (nonatomic,retain) VALSecureEnclaveValet *keychain;
 @property (nonatomic,retain) NSString *keychain_key;
-//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
-- (void)requestPassphrase;
 - (void)copyName;
-- (BOOL)copyPass:(BOOL)passwordOnly;
+- (void)showAlertWithMessage:(NSString *)message alertTitle:(NSString *)title;
+- (void)decryptGpgWithPasswordOnly:(BOOL)passwordOnly copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert;
+- (void)requestGpgPassphrase:(BOOL)passwordOnly entryTitle:(NSString *)title copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert;
 @end
 
 
@@ -23,14 +23,14 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-//  self.title = NSLocalizedString(@"Passwords", @"Password title");
-  self.keychain = [A0SimpleKeychain keychain];
+  // self.title = NSLocalizedString(@"Passwords", @"Password title");
 
-  self.useTouchID = YES; // TODO Make this optional for non-iOS 8.
+  self.keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass"];
+  self.useTouchID = [[self.keychain class] supportsSecureEnclaveKeychainItems];
+
+  // TODO Further work required for non-TouchID devices
   if (self.useTouchID) {
     // Local TouchID authentication
-    self.keychain.useAccessControl = YES;
-    self.keychain.defaultAccessiblity = A0SimpleKeychainItemAccessibleWhenPasscodeSetThisDeviceOnly;
     self.keychain_key = @"gpg-passphrase-touchid";
   } else {
     self.keychain_key = @"passphrase";
@@ -43,14 +43,14 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 3;
+  return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *CellIdentifier = @"EntryDetailCell";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   if (cell == nil) {
-    cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier] autorelease];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
   }
 
   switch(indexPath.row) {
@@ -60,11 +60,19 @@
       break;
     case 1:
       cell.textLabel.text = @"Password";
-      cell.detailTextLabel.text = @"********";
+      cell.detailTextLabel.text = @"Tap to show";
       break;
     case 2:
+      cell.textLabel.text = @"Password";
+      cell.detailTextLabel.text = @"Tap to copy to Pasteboard";
+      break;
+    case 3:
       cell.textLabel.text = @"Full text";
-      cell.detailTextLabel.text = @"********";
+      cell.detailTextLabel.text = @"Tap to show";
+      break;
+    case 4:
+      cell.textLabel.text = @"Full text";
+      cell.detailTextLabel.text = @"Tap to copy to Pasteboard";
       break;
     default:
       break;
@@ -82,17 +90,20 @@
       [self copyName];
       break;
     case 1:
-      // Password, first line only
-      // Try and decrypt password; if that fails, request it
-      if (![self copyPass]) {
-        [self requestPassphrase];
-      }
+      // Password, first line only, alert
+      [self decryptGpgWithPasswordOnly:YES copyToPasteboard:NO showInAlert:YES];
       break;
     case 2:
-      // Full text, all lines
-      if (![self copyPass:NO]) {
-        [self requestPassphrase];
-      }
+      // Password, first line only, pasteboard
+      [self decryptGpgWithPasswordOnly:YES copyToPasteboard:YES showInAlert:NO];
+      break;
+    case 3:
+      // Full text, all lines, alert
+      [self decryptGpgWithPasswordOnly:NO copyToPasteboard:NO showInAlert:YES];
+      break;
+    case 4:
+      // Full text, all lines, passboard
+      [self decryptGpgWithPasswordOnly:NO copyToPasteboard:YES showInAlert:NO];
       break;
     default:
       break;
@@ -103,71 +114,86 @@
   [UIPasteboard generalPasteboard].string = string;
 }
 
+- (void)showAlertWithMessage:(NSString *)message alertTitle:(NSString *)title {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
+  [alert addAction:defaultAction];
+  [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)copyName {
   [self copyToPasteboard:self.entry.name];
 }
 
-- (BOOL)copyPass {
-  return [self copyPass:YES];
+- (void) performPasswordAction:(NSString *)password entryTitle:(NSString *)title copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert {
+  if (pasteboard) {
+    [self copyToPasteboard:password];
+  }
+  if (showAlert) {
+    [self showAlertWithMessage:password alertTitle:title];
+  }
 }
 
-- (BOOL)copyPass:(BOOL)passwordOnly {
-  NSString *pass;
-  NSString *passphrase;
+- (void)decryptGpgWithPasswordOnly:(BOOL)passwordOnly copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert {
+  BOOL result = NO;
+  NSString *password; // Decryped password
+  NSString *keychain_passphrase; // iOS keychain passphrase
+
   if (self.useTouchID) {
-    passphrase = [self.keychain stringForKey:self.keychain_key promptMessage:@"Unlock your keychain to access this password."];
+    keychain_passphrase = [self.keychain stringForKey:self.keychain_key userPrompt:@"Unlock your keychain to access this password."];
   } else {
-    passphrase = [self.keychain stringForKey:self.keychain_key];
+    keychain_passphrase = [self.keychain stringForKey:self.keychain_key];
   }
 
-  if (passphrase) {
-    pass = [self.entry passWithPassphrase:passphrase passwordOnly:passwordOnly];
-    if (pass) {
-      [self copyToPasteboard:pass];
-      return YES;
-    } else {
-      [self.keychain deleteEntryForKey:self.keychain_key];
-      [self debugAlert:@"Removed incorrect GPG passphrase from keychain."];
-      return NO;
-    }
-  } else {
-      return NO;
-  }
-}
-
-- (void)requestPassphrase {
-    // Deprecated in iOS 8, see https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertView_Class/index.html#//apple_ref/occ/cl/UIAlertView
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Enter passphrase for your GPG key" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-  alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
-  [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-  NSString *passphrase;
-  NSString *password;
-  if (buttonIndex == 1) {
-    passphrase = [alertView textFieldAtIndex:0].text;
-
-    // If the passphrase decrypts the entry, save it
-    password = [self.entry passWithPassphrase:passphrase passwordOnly:YES];
+  if (keychain_passphrase) {
+    password = [self.entry passWithPassphrase:keychain_passphrase passwordOnly:passwordOnly];
     if (password) {
-      if (self.useTouchID) {
-        [self.keychain setString:passphrase forKey:self.keychain_key promptMessage:@"Securely store your GPG passphrase"];
-      } else {
-        [self.keychain setString:passphrase forKey:self.keychain_key];
-      }
-      [self copyToPasteboard:password];
-    } else {
-      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Passphrase invalid" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-      [alert show];
+      [self performPasswordAction:password entryTitle:self.entry.name copyToPasteboard:pasteboard showInAlert:showAlert];
+      result = YES;
     }
+  }
+
+  if (!result) {
+    // GPG decryption failed with stored keychain passphrase or no keychain passphrase present
+    // so try requesting the passphase
+    [self requestGpgPassphrase:passwordOnly entryTitle:self.entry.name copyToPasteboard:pasteboard showInAlert:showAlert];
   }
 }
 
-//Example: [self debugAlert:@"Pass was nil; would delete here"];
-- (void)debugAlert:(NSString *)alertMessage {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:alertMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-  [alert show];
+- (void)requestGpgPassphrase:(BOOL)passwordOnly entryTitle:(NSString *)title copyToPasteboard:(BOOL)pasteboard showInAlert:(BOOL)showAlert {
+  UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Passphrase" message:@"Enter passphrase for your GPG key" preferredStyle:UIAlertControllerStyleAlert];
+
+  UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {}];
+  [alert addAction:cancelAction];
+
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    NSString *keychain_passphrase = ((UITextField *)[alert.textFields objectAtIndex:0]).text;
+    // If the passphrase decrypts the entry, save it
+    NSString *password = [self.entry passWithPassphrase:keychain_passphrase passwordOnly:YES];
+    if (password) {
+        if (self.useTouchID) {
+            [self.keychain setString:keychain_passphrase forKey:self.keychain_key]; //userPrompt:@"Securely store your GPG passphrase"];
+        } else {
+            [self.keychain setString:keychain_passphrase forKey:self.keychain_key];
+        }
+
+        [self performPasswordAction:password entryTitle:title copyToPasteboard:pasteboard showInAlert:showAlert];
+
+    } else {
+        UIAlertController *invalidAlert = [UIAlertController alertControllerWithTitle:@"Passphrase" message:@"Passphrase invalid" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* okayAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
+        [invalidAlert addAction:okayAction];
+        [self presentViewController:invalidAlert animated:YES completion:nil];
+    }
+  }];
+  [alert addAction:defaultAction];
+
+  [alert addTextFieldWithConfigurationHandler: ^(UITextField *textField) {
+    textField.placeholder = @"Passphrase";
+    textField.secureTextEntry = YES;
+  }];
+
+  [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end
