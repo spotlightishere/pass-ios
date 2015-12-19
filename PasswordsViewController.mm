@@ -34,7 +34,7 @@
   keychain.defaultAccessiblity = A0SimpleKeychainItemAccessibleWhenPasscodeSetThisDeviceOnly;
   keychain_key = @"gpg-passphrase-touchid";
   [keychain deleteEntryForKey:keychain_key];
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Deleted" message:@"Passphrase removed from Keychain" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Deleted" message:@"Passphrase removed from Keychain" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
   [alert show];
 }
 

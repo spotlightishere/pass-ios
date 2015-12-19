@@ -137,7 +137,7 @@
 
 - (void)requestPassphrase {
     // Deprecated in iOS 8, see https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertView_Class/index.html#//apple_ref/occ/cl/UIAlertView
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Enter passphrase for your GPG key" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Enter passphrase for your GPG key" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
   alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
   [alert show];
 }
@@ -158,7 +158,7 @@
       }
       [self copyToPasteboard:password];
     } else {
-      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Passphrase invalid" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Passphrase" message:@"Passphrase invalid" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
       [alert show];
     }
   }
@@ -166,7 +166,7 @@
 
 //Example: [self debugAlert:@"Pass was nil; would delete here"];
 - (void)debugAlert:(NSString *)alertMessage {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:alertMessage delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:alertMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
   [alert show];
 }
 
