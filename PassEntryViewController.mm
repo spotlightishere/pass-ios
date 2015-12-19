@@ -182,10 +182,7 @@
         [self performPasswordAction:password entryTitle:title copyToPasteboard:pasteboard showInAlert:showAlert];
 
     } else {
-        UIAlertController *invalidAlert = [UIAlertController alertControllerWithTitle:@"Passphrase" message:@"Passphrase invalid" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* okayAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
-        [invalidAlert addAction:okayAction];
-        [self presentViewController:invalidAlert animated:YES completion:nil];
+        [self showAlertWithMessage:@"Passphrase invalid" alertTitle:@"Passphrase"];
     }
   }];
   [alert addAction:defaultAction];
