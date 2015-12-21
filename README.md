@@ -3,50 +3,73 @@ Pass for iOS
 
 ![Icon](https://raw.github.com/davidjb/pass-ios/master/Resources/Icon@3x.png)
 
-View your [password-store][] passwords on your iDevice.
+View your [pass password store][] passwords on your iDevice.
 
-[password-store]: http://zx2c4.com/projects/password-store
+[password-store]: http://www.passwordstore.org
+
+Features
+--------
+
+* Access and decrypt GPG-based files within your Pass-compatible store
+* Copy passwords to pasteboard or display on screen
+* View or copy multi-line Pass content
+* Resets pasteboard contents after 45s when copying data
+* TouchID authentication for storing GPG passphrase
 
 Dependencies
 ------------
 
 The following packages are available from Cydia:
 
-  * gnupg  (required)
-  * git    (optional)
+* gnupg  (required)
+* git    (optional)
 
 Setup
 -----
 
-### Install the app itself
+1. Install the app itself.
 
-See https://github.com/davidjb/pass-ios/wiki for a list of available pre-built .deb packages, or follow the instructions below to build your own.
+   See https://github.com/davidjb/pass-ios/wiki for a list of available pre-built
+   `.deb` packages, or follow the instructions below to build your own.
 
-### Copy your `pass` password-store to /var/mobile/.password-store
+2. Copy your `pass` password-store to `/var/mobile/.password-store`.
 
-The preferred way to do this is to store your passwords in a `git` repository, which you can then clone. Alternatively, you can use scp, iFile or any other method to transfer the passwords over.
+   The simplest way to do this is to store your passwords in a `git` repository,
+   which you can then clone onto your device. Alternatively, you can use SCP,
+   iFile or any other method to transfer the passwords over.
 
-### Set up your gpg key
+3. Set up your gpg key:
 
-1) Export your *private* key from your desktop/laptop/etc:
+  1. Export your *private* key from your desktop, laptop or other computer:
 
-    (desktop)$ gpg --export-secret-key --armor ${KEY_ID} > ${KEY_ID}.asc
+     ```
+     (desktop)$ gpg --export-secret-key --armor ${KEY_ID} > ${KEY_ID}.asc
+     ```
 
-2) Copy this file to your device
+  2. Copy this file to your iOS device
 
-3) On the device, import the key
+  3. On the device, import the key:
 
-    (device)$ gpg --import ${KEY_ID}.asc
+     ```
+     (device)$ gpg --import ${KEY_ID}.asc
+     ```
 
-4) Delete the key file
+  4. Delete the key file
 
-5) Test decrypting one of your passwords
+  5. Test decrypting one of your passwords
 
-    (device)$ gpg -d ~/.password-store/ENTRY.gpg
+     ```
+     (device)$ gpg -d ~/.password-store/ENTRY.gpg
+     ```
 
-### Using the Pass App
+4. Launch and begin using the Pass app!
 
-After launching the app, you will be presented with a listing of files and directories in `~/.password-store`. Files starting with '.' are hidden, and `.gpg` extensions are stripped.
+Using the app
+-------------
+
+After launching the app, you will be presented with a listing of files and
+directories in `~/.password-store`. Files starting with '.' are hidden, and
+`.gpg` extensions are stripped.
 
 ![Main Screen](https://raw.github.com/davidjb/pass-ios/screenshots/screenshots/1_main_screen.png)
 
@@ -90,6 +113,10 @@ Building
    ```
 
    Ensure that you have access to root on your device via SSH.
+
+If your newly installed app doesn't appear, run `uicache` on your device via
+SSH.  This will typically only be on first install or if you've updated a
+visual aspect that would appear on the home screen.
 
 
 Todo
