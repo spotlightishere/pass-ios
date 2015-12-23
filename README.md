@@ -5,7 +5,7 @@ Pass for iOS
 
 View your [pass password store][] passwords on your iDevice.
 
-[password-store]: http://www.passwordstore.org
+[pass password store]: http://www.passwordstore.org
 
 Features
 --------
@@ -13,7 +13,7 @@ Features
 * Access and decrypt GPG-based files within your Pass-compatible store
 * Copy passwords to pasteboard or display on screen
 * View or copy multi-line Pass content
-* Resets pasteboard contents after 45s when copying data
+* Resets pasteboard contents after 45 seconds when copying data
 * TouchID authentication for storing GPG passphrase
 
 Dependencies
@@ -118,6 +118,17 @@ If your newly installed app doesn't appear, run `uicache` on your device via
 SSH.  This will typically only be on first install or if you've updated a
 visual aspect that would appear on the home screen.
 
+Contributing
+------------
+
+You're awesome -- all help is greatly appreciated!  Just fork and submit a
+pull request on GitHub. For major changes or new features, consider opening
+an issue first for discussion; this may save you a bunch of time in coding!
+
+If you're not sure where to start contributing, take a look at the 
+[issue tracker](https://github.com/davidjb/pass-ios/issues)
+to see the current list of bugs to solve or features to implement, and consult
+the todo list below.
 
 Todo
 ----
@@ -126,6 +137,7 @@ Todo
 
   - enter git repo url to clone
   - paste gpg key
+  - investigate becoming an official App Store app
 
 * Better details screen
 
