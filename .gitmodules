@@ -1,3 +1,6 @@
 [submodule "modules/Valet"]
 	path = modules/Valet
 	url = https://github.com/Square/Valet.git
+[submodule "modules/theos"]
+	path = modules/theos
+	url = https://github.com/rpetrich/theos.git

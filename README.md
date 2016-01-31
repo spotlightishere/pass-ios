@@ -93,14 +93,14 @@ Building
 2. Build using the following:
 
    ```
-   mkdir pass-ios-build
-   git clone --recursive https://github.com/rpetrich/theos.git
    git clone --recursive https://github.com/davidjb/pass-ios.git
-   export THEOS=$(pwd)/theos
    cd pass-ios
+   source .env
    make
    make package
    ```
+
+   This clones and configures the theos environment for building.
 
 3. Install directly your device over SSH with:
 
