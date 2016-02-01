@@ -91,23 +91,21 @@ Building
 
 1. Obtain the iPhone SDK, usually done via Xcode.
 
-2. Build using the following:
+2. Install [Homebrew](http://brew.sh/) and install `ldid`:
+
+   brew update
+   brew install ldid
+
+3. Build using the following:
 
    ```
    git clone --recursive https://github.com/davidjb/pass-ios.git
    cd pass-ios
-
-   # ldid compilation only required first time
-   cd modules/ldid
-   ./make.sh
-   cd ../..
-
-   source .env
-   make
    make package
    ```
 
-   This clones and configures the theos environment for building.
+   This clones and configures the theos environment for building, producing a
+   `.deb` package.
 
 3. Install directly your device over SSH with:
 
