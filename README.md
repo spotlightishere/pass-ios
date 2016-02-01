@@ -96,6 +96,8 @@ Building
    brew update
    brew install ldid
 
+   If on another platform, consult this [setup documentation](http://iphonedevwiki.net/index.php/Theos/Setup).
+
 3. Build using the following:
 
    ```
