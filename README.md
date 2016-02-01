@@ -29,8 +29,9 @@ Setup
 
 1. Install the app itself.
 
-   See https://github.com/davidjb/pass-ios/wiki for a list of available pre-built
-   `.deb` packages, or follow the instructions below to build your own.
+   See https://github.com/davidjb/pass-ios/releases for a list of available
+   pre-built `.deb` packages, or follow the instructions below to build your
+   own.
 
 2. Copy your `pass` password-store to `/var/mobile/.password-store`.
 
