@@ -6,7 +6,7 @@
  * Please see COPYING for more information
  */
 #import "PassEntry.h"
-#import "NSTask.h"
+#import "NSTask.h"  // Not documented on iOS in Foundation but still available
 
 @implementation PassEntry
 
