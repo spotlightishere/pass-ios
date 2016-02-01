@@ -6,7 +6,7 @@
  * Please see COPYING for more information
  */
 #import "PassEntry.h"
-#import <Foundation/NSTask.h>
+#import "NSTask.h"
 
 @implementation PassEntry
 

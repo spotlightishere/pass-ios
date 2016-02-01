@@ -4,3 +4,6 @@
 [submodule "modules/theos"]
 	path = modules/theos
 	url = https://github.com/rpetrich/theos.git
+[submodule "modules/ldid"]
+	path = modules/ldid
+	url = https://github.com/davidjb/ldid.git

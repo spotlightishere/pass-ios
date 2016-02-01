@@ -28,7 +28,7 @@
   // self.title = NSLocalizedString(@"Passwords", @"Password title");
   self.backgroundTaskIdentifier = 0;
 
-  self.keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass"];
+  self.keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass" accessControl:VALAccessControlUserPresence];
   self.useTouchID = [[self.keychain class] supportsSecureEnclaveKeychainItems];
   self.pasteboard = [UIPasteboard generalPasteboard];
 

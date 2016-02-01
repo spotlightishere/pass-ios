@@ -28,7 +28,7 @@
 
 - (void)clearPassphrase {
   // TODO Refactor into shared function
-  VALSecureEnclaveValet *keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass"];
+  VALSecureEnclaveValet *keychain = [[VALSecureEnclaveValet alloc] initWithIdentifier:@"Pass" accessControl:VALAccessControlUserPresence];
   [keychain removeObjectForKey:@"gpg-passphrase-touchid"];
 
   UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Keychain cleared" message:@"Passphrase has been removed from the keychain" preferredStyle:UIAlertControllerStyleAlert];

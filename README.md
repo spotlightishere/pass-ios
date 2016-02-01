@@ -95,6 +95,12 @@ Building
    ```
    git clone --recursive https://github.com/davidjb/pass-ios.git
    cd pass-ios
+
+   # ldid compilation only required first time
+   cd modules/ldid
+   ./make.sh
+   cd ../..
+
    source .env
    make
    make package
