@@ -8,7 +8,7 @@ pass_CFLAGS=-fobjc-arc -I modules/Valet -I modules/Valet/Valet -I modules/Valet/
 
 TARGET_CODESIGN_FLAGS = -Sent.xml
 
-include modules/theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/application.mk
 
 build-install: clean package install
